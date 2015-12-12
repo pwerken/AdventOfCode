@@ -4,11 +4,9 @@ import Data.List
 
 solve :: Show a => String -> (String -> a) -> IO ()
 solve filename solver =
-  do  input <- readFile filename
-      putStrLn . show . solver $ input
+  readFile filename >>= putStrLn . show . solver
 
 splitOn x [] = []
-splitOn x xs = first : splitOn x rest
+splitOn x xs = first : splitOn x (drop 1 rest)
   where
-    first = takeWhile (/= x) xs
-    rest  = drop (1 + length first) xs
+    (first, rest) = span (/= x) xs
