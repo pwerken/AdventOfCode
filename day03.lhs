@@ -63,8 +63,8 @@ For example:
 
 > mark = zipWith ($) (cycle [Left, Right])
 >
-> travelEither p (Left  d) = mapFst p (flip movePos d)
-> travelEither p (Right d) = mapSnd p (flip movePos d)
+> travelEither p (Left  d) = mapFst (flip movePos d) p
+> travelEither p (Right d) = mapSnd (flip movePos d) p
 >
 > travelBoth :: [Char] -> [Pos]
 > travelBoth = mergeTravels . scanl travelEither ((0,0),(0,0)) . mark

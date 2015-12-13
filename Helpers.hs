@@ -11,7 +11,7 @@ splitOn x xs = first : splitOn x (drop 1 rest)
   where
     (first, rest) = span (/= x) xs
 
-mapFst :: (a, b) -> (a -> c) -> (c, b)
-mapSnd :: (a, b) -> (b -> c) -> (a, c)
-mapFst (x, y) f = (f x, y)
-mapSnd (x, y) f = (x, f y)
+mapFst :: (a -> b) -> (a, c) -> (b, c)
+mapSnd :: (a -> b) -> (c, a) -> (c, b)
+mapFst f (x, y) = (f x, y)
+mapSnd f (x, y) = (x, f y)

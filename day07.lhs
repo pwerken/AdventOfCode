@@ -69,7 +69,7 @@ input), what signal is ultimately provided to wire a?
 >               | Rshift Int Term
 >   deriving (Eq, Show)
 >
-> parseInput = map (flip mapSnd wireToValue . parseLine . words) . lines
+> parseInput = map (mapSnd wireToValue . parseLine . words) . lines
 >
 > parseLine [y,           "->",x] = (x, Wire y)
 > parseLine ["NOT",y,     "->",x] = (x, Not (Wire y))
@@ -125,8 +125,8 @@ input), what signal is ultimately provided to wire a?
 >   where
 >     v = findTermFor "a" cs
 >     (as, bs) = partition (canSolveTerm . snd) cs
->     fs = map (uncurry fillInTerm . flip mapSnd evalTerm) as
->     gs = map (flip mapSnd (mapF fs)) bs
+>     fs = map (uncurry fillInTerm . mapSnd evalTerm) as
+>     gs = map (mapSnd (mapF fs)) bs
 >
 > day07 = solve "input-day07.txt" (forA . parseInput)
 
