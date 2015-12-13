@@ -61,13 +61,13 @@ For example:
 -   ^v^v^v^v^v now delivers presents to 11 houses, with Santa going one
     direction and Robo-Santa going the other.
 
-> mark = zipWith (,) (cycle [0,1])
+> mark = zipWith ($) (cycle [Left, Right])
 >
-> travelOne (x,y) (0, d) = (movePos x d, y)
-> travelOne (x,y) (1, d) = (x, movePos y d)
+> travelEither p (Left  d) = mapFst p (flip movePos d)
+> travelEither p (Right d) = mapSnd p (flip movePos d)
 >
 > travelBoth :: [Char] -> [Pos]
-> travelBoth = mergeTravels . scanl travelOne ((0,0),(0,0)) . mark
+> travelBoth = mergeTravels . scanl travelEither ((0,0),(0,0)) . mark
 >
 > mergeTravels :: [(Pos, Pos)] -> [Pos]
 > mergeTravels [] = []
