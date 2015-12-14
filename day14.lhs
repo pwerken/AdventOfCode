@@ -35,9 +35,7 @@ exactly 2503 seconds, what distance has the winning reindeer traveled?
 > import Data.List
 >
 > parseLine :: [String] -> (String, (Int, Int, Int))
-> parseLine [ d, "can","fly",x,"km/s","for",y,"seconds,"
->           , "but","then","must","rest","for",z,"seconds."
->           ] = (d, (read x, read y, read z))
+> parseLine [d,_,_,x,_,_,y,_,_,_,_,_,_,z,_] = (d, (read x, read y, read z))
 >
 > parseInput :: String -> [(String, (Int, Int, Int))]
 > parseInput = map (parseLine . words) . lines

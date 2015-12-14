@@ -35,7 +35,7 @@ What is the distance of the shortest route?
 > parseInput = map (parseLine . words) . lines
 >
 > parseLine :: [String] -> ((String, String), Int)
-> parseLine [x,"to",y,"=",z] = ((x, y), read z)
+> parseLine [x,_,y,_,z] = ((x, y), read z)
 >
 > routes ds = map (sum . map (pairToD ds) . toPairs)
 >           . permutations . nub . sort

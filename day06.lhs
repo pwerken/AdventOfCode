@@ -40,9 +40,9 @@ After following the instructions, how many lights are lit?
 > parsePos :: String -> Pos
 > parsePos z = read ("("++z++")")
 >
-> parseLine ["turn", "on", x,"through",y] = ((parsePos x, parsePos y), On)
-> parseLine ["turn", "off",x,"through",y] = ((parsePos x, parsePos y), Off)
-> parseLine ["toggle",     x,"through",y] = ((parsePos x, parsePos y), Toggle)
+> parseLine [_, "on", x,_,y] = ((parsePos x, parsePos y), On)
+> parseLine [_, "off",x,_,y] = ((parsePos x, parsePos y), Off)
+> parseLine [_,       x,_,y] = ((parsePos x, parsePos y), Toggle)
 >
 > parseInput = map (parseLine . words) . lines
 >
