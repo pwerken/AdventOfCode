@@ -26,17 +26,15 @@ wrapping paper should they order?
 > import Helpers
 > import Data.List
 >
-> wrapbox :: String -> Int
+> wrapbox :: [Int] -> Int
 > wrapbox str = (head ds) + sum (map (2*) ds)
 >   where
->     ds = sort . flats . lengths $ str
+>     ds = sort . (\[l,w,h] -> [l*w, w*h, l*h]) $ str
 >
-> lengths :: String -> [Int]
-> lengths = map read . splitOn 'x'
+> parseLine :: String -> [Int]
+> parseLine = map read . splitOn 'x'
 >
-> flats [l, w, h] = [l*w, w*h, l*h]
->
-> day02 = solve "input-day02.txt" (sum . map wrapbox . lines)
+> day02 = solve "input-day02.txt" (sum . map (wrapbox . parseLine) . lines)
 
 
 --- Part Two ---
@@ -62,10 +60,7 @@ For example:
 
 How many total feet of ribbon should they order?
 
-> ribbons :: String -> Int
-> ribbons str = product ds + round
->   where
->     round = (2*) . sum . take 2 $ ds
->     ds = sort . lengths $ str
+> ribbons :: [Int] -> Int
+> ribbons str = product str + ((2*) . sum . take 2 . sort $ str)
 >
-> day02p2 = solve "input-day02.txt" (sum . map ribbons . lines)
+> day02p2 = solve "input-day02.txt" (sum . map (ribbons . parseLine) . lines)
