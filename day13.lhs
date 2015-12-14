@@ -89,14 +89,6 @@ the actual guest list?
 >     f  = sum . map (pairToD hs) . toPairs
 >
 > day13 = solve "input-day13.txt" (findOptiomal . parseInput)
->
-> j = [(("a","b"), 54+83)
->     ,(("a","c"), -79 + 62)
->     ,(("a","d"), -2 + 46)
->     ,(("b","c"), -7 + 60)
->     ,(("b","d"), -63 - 7)
->     ,(("c","d"), 55+41)
->     ]
 
 
 --- Part Two ---
