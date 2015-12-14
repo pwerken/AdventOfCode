@@ -78,4 +78,15 @@ Dancer would win (if the race ended at 1000 seconds).
 Again given the descriptions of each reindeer (in your puzzle input), after
 exactly 2503 seconds, how many points does the winning reindeer have?
 
-> day14p2 = undefined
+> mapRace l = map (mapSnd (runRace l))
+> distances d = map (flip mapRace d)
+>
+> whosAhead xs = filter ((==) m . snd) $ xs
+>   where
+>     m = maximum . map snd $ xs
+>
+> allWhosAhead x = map (map fst . whosAhead) . flip distances [1..x]
+>
+> mostPoints x = maximum . map length . group . sort . concat . allWhosAhead x
+>
+> day14p2 = solve "input-day14.txt" (mostPoints 2503 . parseInput)
