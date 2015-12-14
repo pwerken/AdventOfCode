@@ -30,12 +30,8 @@ How many strings are nice?
 >
 > type Pos = (Int, Int)
 >
-> isVowel 'a' = True
-> isVowel 'e' = True
-> isVowel 'i' = True
-> isVowel 'o' = True
-> isVowel 'u' = True
-> isVowel _   = False
+> isVowel :: Char -> Bool
+> isVowel = flip elem "aeiou"
 >
 > hasNiceVowels :: String -> Bool
 > hasNiceVowels = (>= 3) . length . take 3 . filter isVowel
@@ -46,16 +42,12 @@ How many strings are nice?
 >
 > isDouble :: String -> Bool
 > isDouble [a,b] = a == b
-> isDouble _ = False
 >
 > hasDoubleSubstring :: String -> Bool
 > hasDoubleSubstring = or . map isDouble . subPairs
 >
 > hasNaughtyCombo :: String -> Bool
-> hasNaughtyCombo xs =  elem "ab" ys || elem "cd" ys ||
->                       elem "pq" ys || elem "xy" ys
->   where
->     ys = subPairs xs
+> hasNaughtyCombo xs =  any (flip elem (subPairs xs)) ["ab","cd","pq","xy"]
 >
 > isNiceString :: String -> Bool
 > isNiceString xs = hasNiceVowels xs &&
@@ -93,9 +85,8 @@ For example:
 
 How many strings are nice under these new rules?
 
-> isInList []  = False
-> isInList [x] = False
-> isInList (x:xs) = elem x (tail xs) || isInList xs
+> isInList (a:b:xs) = elem a xs || isInList (b:xs)
+> isInList _ = False
 >
 > containsPair = isInList . subPairs
 >
