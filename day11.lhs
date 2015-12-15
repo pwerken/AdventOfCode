@@ -41,3 +41,45 @@ Given Santa's current password (your puzzle input), what should his next
 password be?
 
 Your puzzle input is vzbxkghb.
+
+> import Data.List
+> import Data.Char
+>
+> nextPass = map chr . reverse . up . reverse . map ord
+>   where
+>     up (122:ys) = 97 : up ys
+>     up (x:ys)   = (x+1):ys
+>     up []       = [97]
+>
+> hasThreeStraight :: String -> Bool
+> hasThreeStraight = f . map ord
+>   where
+>     f (a:b:c:ds) = if a + 1 == b && b + 1 == c then True else f (b:c:ds)
+>     f _          = False
+>
+> noIOL :: String -> Bool
+> noIOL = not . or . map (flip elem "iol")
+>
+> subPairs :: String -> [String]
+> subPairs (a:b:xs) = [a,b] : subPairs (b:xs)
+> subPairs _ = []
+>
+> isDouble :: String -> Bool
+> isDouble [a,b] = a == b
+>
+> hasDoublePair :: String -> Bool
+> hasDoublePair = (>= 2) . length . nub . sort . filter isDouble . subPairs
+>
+> okPassw :: String -> Bool
+> okPassw s = and $ map (\f -> f s) [hasThreeStraight, noIOL, hasDoublePair]
+>
+> nextValidPass = head . filter okPassw . iterate nextPass . nextPass
+>
+> day11 = nextValidPass "vzbxkghb"
+
+
+--- Part Two ---
+
+Santa's password expired again. What's the next one?
+
+> day11p2 = nextValidPass day11
