@@ -23,8 +23,6 @@ What is the sum of all numbers in the document?
 > import Helpers
 > import Data.Char
 > import Data.List
-> import Text.JSON
->
 >
 > validChar '-' = True
 > validChar x = isDigit x
@@ -50,4 +48,34 @@ value "red". Do this only for objects ({...}), not arrays ([...]).
     structure is ignored.
 -   [1,"red",5] has a sum of 6, because "red" in an array has no effect.
 
-> -- day12p2 = solve "input-day12.txt" (decode)
+> data Json = I Int | S String | A [Json] | O [Json]
+>   deriving (Show,Eq)
+>
+> parse ('"':xs)  = parseS xs
+> parse ('[':xs)  = mapFst A $ parseA xs
+> parse ('{':xs)  = mapFst O $ parseO xs
+> parse xs        = parseI xs
+>
+> parseI = mapFst (I . read) . span (flip elem "1234567890-")
+> parseS = mapFst (S) . mapSnd tail . span (/= '"')
+>
+> parseA :: String -> ([Json], String)
+> parseA (']':xs) = ([], xs)
+> parseA (',':xs) = parseA xs
+> parseA xs       = let (y, ys) = parse xs
+>                    in mapFst (y:) $ parseA ys
+>
+> parseO :: String -> ([Json], String)
+> parseO ('}':xs) = ([], xs)
+> parseO (',':xs) = parseO xs
+> parseO xs       = let (_, ys) = parse xs
+>                       (v, zs) = parse (tail ys)
+>                    in mapFst (v:) $ parseO zs
+>
+> evalJson :: Json -> Int
+> evalJson (I i)  = i
+> evalJson (S _)  = 0
+> evalJson (A xs) = sum $ map evalJson xs
+> evalJson (O xs) = if (S "red" `elem` xs) then 0 else sum $ map evalJson xs
+>
+> day12p2 = solve "input-day12.txt" (evalJson . fst . parse)
