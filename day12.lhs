@@ -24,10 +24,9 @@ What is the sum of all numbers in the document?
 > import Data.Char
 > import Data.List
 >
-> validChar '-' = True
-> validChar x = isDigit x
+> digitChar = flip elem "1234567890-"
 >
-> groupDigits = groupBy (\x y -> validChar x == validChar y)
+> groupDigits = groupBy (\x y -> digitChar x == digitChar y)
 > onlyDigits  = filter (isDigit . last) . groupDigits
 >
 > day12 = solve "input-day12.txt" (sum . map read . onlyDigits)
@@ -56,7 +55,7 @@ value "red". Do this only for objects ({...}), not arrays ([...]).
 > parse ('{':xs)  = mapFst O $ parseO xs
 > parse xs        = parseI xs
 >
-> parseI = mapFst (I . read) . span (flip elem "1234567890-")
+> parseI = mapFst (I . read) . span digitChar
 > parseS = mapFst (S) . mapSnd tail . span (/= '"')
 >
 > parseA :: String -> ([Json], String)
