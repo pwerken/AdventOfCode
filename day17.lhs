@@ -23,8 +23,8 @@ containers can exactly fit all 150 liters of eggnog?
 > parse = map (read) . lines
 >
 > combis :: Int -> [Int] -> Maybe [[Int]]
-> combis 0 [] = Just [[]]
-> combis _ [] = Nothing
+> combis 0 _      = Just [[]]
+> combis _ []     = Nothing
 > combis x (c:cs) = case (compare x (sum (c:cs))) of
 >                     EQ -> Just [c:cs]
 >                     GT -> Nothing
