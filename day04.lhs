@@ -29,7 +29,7 @@ Your puzzle input is yzbqklnj.
 > coinInput i = puzzleInput ++ (show i)
 >
 > coinCheck :: Int -> MD5Digest -> Bool
-> coinCheck i = (== replicate i '0') . take 5 . show
+> coinCheck i = (== replicate i '0') . take i . show
 >
 > day04 = head . filter (coinCheck 5 . md5 . pack . coinInput) $ [1..]
 
@@ -39,11 +39,3 @@ Your puzzle input is yzbqklnj.
 Now find one that starts with six zeroes.
 
 > day04p2 = head . filter (coinCheck 6 . md5 . pack . coinInput) $ [1..]
->
-> longList = map (\x -> (coinCheck 6 . md5 . pack . coinInput $ x, x))
-> showProgress ((True,  i):xs)  = [i]
-> showProgress ((False, i):xs)
->   | (mod i 10000 == 0)        = i : showProgress xs
->   | otherwise                 = showProgress xs
->
-> main = do putStrLn . show . showProgress . longList $ [777800000..]
