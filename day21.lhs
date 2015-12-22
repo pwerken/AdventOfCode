@@ -66,3 +66,32 @@ You have 100 hit points. The boss's actual stats are in your puzzle input.
 What is the least amount of gold you can spend and still win the fight?
 
 To begin, get your puzzle input.
+
+> import Helpers
+>
+> boss = (100, 8, 2)
+>
+> weapon  = [(  8,4,0),( 10,5,0),( 25,6,0),( 40,7,0),( 74,8,0)]
+> armor   = [(  0,0,0),( 13,0,1),( 31,0,2),( 53,0,3),( 75,0,3),(102,0,5)]
+> ring    = [(  0,0,0),( 25,1,0),( 50,2,0),(100,3,0),( 20,0,1),( 40,0,2),( 60,0,3)]
+> rings   = (0,0,0) : [ addItems r1 r2 | r1 <- ring, r2 <- ring, r1 /= r2 ]
+> options = [ addAllItems [w,a,r] | w <- weapon, a <- armor, r <- rings ]
+>
+> addItems (h1,d1,a1) (h2,d2,a2) = (h1+h2,d1+d2,a1+a2)
+> addAllItems = foldl addItems (0,0,0)
+>
+> fightBoss (_, pd, pa) = fight boss (100, pd, pa)
+> fight (ph,pd,pa) (bh,bd,ba) = ph * max 1 (pd - ba) <= bh * max 1 (bd - pa)
+>
+> day21 = minimum . map (\(g, _, _) -> g) . filter fightBoss $ options
+
+
+--- Part Two ---
+
+Turns out the shopkeeper is working with the boss, and can persuade you to buy
+whatever items he wants. The other rules still apply, and he still only has
+one of each item.
+
+What is the most amount of gold you can spend and still lose the fight?
+
+> day21p2 = maximum . map (\(g,_,_) -> g) . filter (not . fightBoss) $ options
