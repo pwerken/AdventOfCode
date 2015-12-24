@@ -136,3 +136,102 @@ You start with 50 hit points and 500 mana points. The boss's actual stats
 are in your puzzle input. What is the least amount of mana you can spend and
 still win the fight? (Do not include mana recharge effects as "spending"
 negative mana.)
+
+> import Helpers
+>
+> start = Game 50 500 58 9 0 0 0
+>
+> data Spell = M | D | S | P | R | X deriving (Show, Eq)
+> data Game = Game  { playerHP, mana, bossHP, bossDamage
+>                   , shield, poison, recharge :: Int }
+>           | Win
+>           | Lose
+>   deriving (Show, Eq)
+>
+> gfM :: [(Game -> Game)] -> Game -> Game
+> gfM []      g = g
+> gfM (f:fs)  g = gfM fs $ gf f g
+>
+> gf :: (Game -> Game) -> Game -> Game
+> gf _ Win  = Win
+> gf _ Lose = Lose
+> gf f g    = f g
+>
+> useMana     i g = let x = mana g
+>                    in if x <= i then Lose else g { mana = x - i }
+> hitBoss     i g = let x = bossHP g
+>                    in if x <= i then Win  else g { bossHP = x - i }
+> hitPlayer   i g = let x = playerHP g
+>                    in if x <= i then Lose else g { playerHP = x - i }
+> healPlayer  i g = hitPlayer (0 - i) g
+> shieldOn      g = let x = shield g
+>                    in if x > 0  then Lose else g { shield = 6 }
+> poisonOn      g = let x = poison g
+>                    in if x > 0  then Lose else g { poison = 6 }
+> rechargeOn    g = let x = recharge g
+>                    in if x > 0  then Lose else g { recharge = 5 }
+> tickShield g
+>   | shield g == 0   = g
+>   | otherwise       = g { shield = shield g - 1 }
+>
+> tickPoison g
+>   | poison g == 0   = g
+>   | otherwise       = hitBoss 3 (g { poison = poison g - 1})
+>
+> tickRecharge g
+>   | recharge g == 0 = g
+>   | otherwise       = useMana (-101) (g { recharge = recharge g - 1})
+>
+> tick = gfM [tickShield, tickPoison, tickRecharge]
+>
+> castSpell M g = gfM [ useMana  53,  hitBoss 4                 ] g
+> castSpell D g = gfM [ useMana  73,  hitBoss 2,  healPlayer 2  ] g
+> castSpell S g = gfM [ useMana 113,  shieldOn                  ] g
+> castSpell P g = gfM [ useMana 173,  poisonOn                  ] g
+> castSpell R g = gfM [ useMana 229,  rechargeOn                ] g
+>
+> bossHits g    = let a = if shield g > 0 then 7 else 0
+>                  in hitPlayer (max 1 (bossDamage g - a)) g
+>
+> checkState g
+>   | bossHP g    <= 0  = Win
+>   | playerHP g  <= 0  = Lose
+>   | otherwise         = g
+>
+> hardMode True   = hitPlayer 1
+> hardMode False  = id
+>
+> playTurn s h g  = gfM [ hardMode h, castSpell s, tick
+>                       , bossHits, tick, checkState ] g
+>
+> manaCost acc (M:xs) = manaCost (acc +  53) xs
+> manaCost acc (D:xs) = manaCost (acc +  73) xs
+> manaCost acc (S:xs) = manaCost (acc + 113) xs
+> manaCost acc (P:xs) = manaCost (acc + 173) xs
+> manaCost acc (R:xs) = manaCost (acc + 229) xs
+> manaCost acc (X:xs) = 0
+> manaCost acc []     = acc
+>
+> depthFirstSolve :: Int -> Bool -> Game -> [[Spell]]
+> depthFirstSolve 0 _ _     = [[X]]
+> depthFirstSolve _ _ Lose  = [[X]]
+> depthFirstSolve _ _ Win   = [[ ]]
+> depthFirstSolve y h x     = if null rs then [[X]] else rs
+>   where
+>     f s = map (s :) . depthFirstSolve (y - 1) h $ playTurn s h x
+>     rs  = filter (null . filter ((== X))) . concatMap f $ [R,P,S,D,M]
+>
+> day22 = minimum . map (manaCost 0) . depthFirstSolve 10 False $ start
+
+
+--- Part Two ---
+
+On the next run through the game, you increase the difficulty to hard.
+
+At the start of each player turn (before any other effects apply), you lose
+1 hit point. If this brings you to or below 0 hit points, you lose.
+
+With the same starting stats for you and the boss, what is the least amount of
+mana you can spend and still win the fight?
+
+> day22p2 = minimum . map (manaCost 0) . depthFirstSolve 10 True $ start
