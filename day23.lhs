@@ -43,3 +43,67 @@ to skip the tpl instruction:
 
 What is the value in register b when the program in your puzzle input is
 finished executing?
+
+> import Helpers
+>
+> data Inst = HLF Char      --  r / 2
+>           | TPL Char      --  r * 3
+>           | INC Char      --  r + 1
+>           | JMP Int       --  jump
+>           | JIE Char Int  --  jump if even
+>           | JIO Char Int  --  jump if one
+>   deriving (Eq, Show)
+>
+> data State = State { a, b, ptr :: Int } deriving (Eq, Show)
+>
+> mvPtr :: Int -> State -> State
+> mvPtr i s = s { ptr = ptr s + i }
+>
+> regR :: Char -> State -> Int
+> regR 'a' s = a s
+> regR 'b' s = b s
+>
+> regW :: Char -> Int -> State -> State
+> regW 'a' i s = s { a = i }
+> regW 'b' i s = s { b = i }
+>
+> isEven = (==) 0 . flip mod 2
+>
+> doInstr :: Inst -> State -> State
+> doInstr (HLF r)   s = mvPtr 1 $ regW r (regR r s `div` 2) s
+> doInstr (TPL r)   s = mvPtr 1 $ regW r (3 * regR r s)     s
+> doInstr (INC r)   s = mvPtr 1 $ regW r (1 + regR r s)     s
+> doInstr (JMP i)   s = mvPtr i s
+> doInstr (JIE r i) s = mvPtr (if isEven (regR r s) then i else 1) s
+> doInstr (JIO r i) s = mvPtr (if (== 1) (regR r s) then i else 1) s
+>
+> initProgram = State 0 0 0
+>
+> runProgram s is = case lookup (ptr s) (zipWith (,) [0..] is) of
+>                     Nothing -> s
+>                     Just i  -> runProgram (doInstr i s) is
+>
+> exampleProg = runProgram initProgram [INC 'a', JIO 'a' 2, TPL 'a', INC 'a']
+>
+> parseInput = map (parseInstr . words) . lines
+> parseInstr ["hlf", r]     = HLF (head r)
+> parseInstr ["tpl", r]     = TPL (head r)
+> parseInstr ["inc", r]     = INC (head r)
+> parseInstr ["jmp", x]     = JMP (parseOff x)
+> parseInstr ["jie", r, x]  = JIE (head r) (parseOff x)
+> parseInstr ["jio", r, x]  = JIO (head r) (parseOff x)
+> parseOff ('-':xs) = 0 - (read xs)
+> parseOff ('+':xs) = read xs
+>
+> day23 = solve "input-day23.txt" (b . runProgram initProgram . parseInput)
+
+
+--- Part Two ---
+
+The unknown benefactor is very thankful for releasi-- er, helping little
+Jane Marie with her computer. Definitely not to distract you, what is the
+value in register b after the program is finished executing if register a
+starts as 1 instead?
+
+> initA1 = initProgram { a = 1 }
+> day23p2 = solve "input-day23.txt" (b . runProgram initA1 . parseInput)
