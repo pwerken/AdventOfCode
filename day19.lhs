@@ -48,6 +48,7 @@ can do one replacement on the medicine molecule?
 > import Helpers
 > import Data.List
 > import Data.Tuple
+> import Data.Maybe
 >
 > parseR [x,"=>",y] = (x, y)
 > parseInput = (mapFst (map (parseR . words)) . mapSnd head
@@ -96,3 +97,24 @@ be made in 6 steps.
 How long will it take to make the medicine? Given the available replacements
 and the medicine molecule in your puzzle input, what is the fewest number of
 steps to go from e to the medicine molecule?
+
+> fromMaybeList [] = []
+> fromMaybeList (Nothing:xs) =     fromMaybeList xs
+> fromMaybeList (Just x :xs) = x : fromMaybeList xs
+>
+> step i rs m
+>     | null ps       = Nothing
+>     | "e" `elem` ns = Just i
+>     | null ls       = Nothing
+>     | otherwise     = Just (head ls)
+>   where
+>     ps = filter (flip isInfixOf m . fst) rs
+>     ns = concatMap (tail . flip replace1 m) ps
+>     ms = filter (not . elem 'e') $ ns
+>     ls = fromMaybeList . map (step (i+1) rs) $ ms
+>
+> sortLengthFst = sortBy (\x y -> compare (length $ fst x) (length $ fst y))
+> prep = mapFst (reverse . sortLengthFst . map swap) -- . mapSnd (:[])
+> findE = fromJust . uncurry (step 1)
+>
+> day19p2 = solve "input-day19.txt" (findE . prep . parseInput)
