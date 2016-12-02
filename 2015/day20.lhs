@@ -37,3 +37,40 @@ What is the lowest house number of the house to get at least as many
 presents as the number in your puzzle input?
 
 Your puzzle input is 29000000.
+
+> import Control.Monad.ST
+> import Control.Monad
+> import Data.Array.ST
+>
+> addToIndex :: (Num b, Ix i, MArray a b m) => a i b -> i -> b -> m ()
+> addToIndex arr i a = readArray arr i >>= writeArray arr i . (a +)
+>
+> sendElf arr m i = mapM_ (flip (addToIndex arr) (i*10)) (indexes i m)
+>                   >>  readArray arr i
+>
+> indexes i m = takeWhile (<= m) $ map (* i) [1..]
+>
+> visitHouses m = do  houses <- newArray (1, m) 0 :: ST s (STArray s Int Int)
+>                     forM [1..m] (sendElf houses m)
+>
+> day20 = length . takeWhile (< 29000000) $ runST (visitHouses 1000000)
+> day20' = runST (visitHouses 1000000)
+
+--- Part Two ---
+
+The Elves decide they don't want to visit an infinite number of houses.
+Instead, each Elf will stop after delivering presents to 50 houses. To make up
+for it, they decide to deliver presents equal to eleven times their number at
+each house.
+
+With these changes, what is the new lowest house number of the house to get at
+least as many presents as the number in your puzzle input?
+
+Your puzzle input is still 29000000.
+
+ addPresents' 0 _ _  = []
+ addPresents' z x [] = []
+ addPresents' z x ys = let ((a:as), bs) = splitAt x ys
+                        in (a + x*11):as ++ addPresents' (z - 1) x bs
+
+ day20p2 = print $ findHouse (1 : elfSequence (addPresents' 50) 2 (houses 11))
