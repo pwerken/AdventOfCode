@@ -50,20 +50,18 @@ desk. What is the bathroom code?
 > type Pos = (Int, Int)
 > data Move = D | L | R | U deriving Show
 >
-> t = "ULL\nRRDDD\nLURDL\nUUUUD"
->
 > p2d :: Pos -> Int
 > p2d (x, y) = 2 + x + 3*(y+1)
 >
 > validateMove :: Pos -> Pos -> Pos
 > validateMove old (x, y) = if (abs(x) > 1 || abs(y) > 1) then old else (x, y)
-
+>
 > move :: (Pos -> Pos -> Pos) -> Pos -> Move -> Pos
 > move f (x, y) D = f (x, y) (x  , y+1)
 > move f (x, y) L = f (x, y) (x-1, y  )
 > move f (x, y) R = f (x, y) (x+1, y  )
 > move f (x, y) U = f (x, y) (x  , y-1)
-
+>
 > doMoves = tail . scanl (foldl (move validateMove)) (0, 0)
 >
 > parse = map (map parseM) . lines
@@ -75,6 +73,9 @@ desk. What is the bathroom code?
 > parseM 'U' = U
 >
 > day02 = solve "input-day02.txt" (map p2d . doMoves . parse)
+
+
+--- Part Two ---
 
 You finally arrive at the bathroom (it's a several minute walk from the
 lobby so visitors can behold the many fancy conference rooms and water
@@ -105,19 +106,12 @@ So, given the actual keypad layout, the code would be 5DB3.
 Using the same instructions in your puzzle input, what is the correct
 bathroom code?
 
-  0 1 2 3 4
-0 . . 1 . .
-1 . 2 3 4 .
-2 5 6 7 8 9
-3 . A B C .
-4 . . D . .
-
 > dist :: Pos -> Int
 > dist (x, y) = abs(x) + abs(y)
 >
 > validateMove2 :: Pos -> Pos -> Pos
 > validateMove2 old new = if dist new <= 2 then new else old
-
+>
 > doMoves2 = tail . scanl (foldl (move validateMove2)) (0, 0)
 >
 > p2d2 ( 0, -2) = '1'
