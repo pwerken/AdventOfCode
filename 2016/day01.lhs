@@ -39,7 +39,7 @@ How many blocks away is Easter Bunny HQ?
 > data Compass = N | E | S | W
 > data Turn = L | R
 >
-> dist (x, y) = abs(x) + abs(y)
+> dist (x, y) = show $ abs(x) + abs(y)
 >
 > makeTurn :: Compass -> Turn -> Compass
 > makeTurn N L = W

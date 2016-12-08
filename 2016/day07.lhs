@@ -44,7 +44,7 @@ How many IPs in your puzzle input support TLS?
 >
 > parse = map (grp . ipv7) . lines
 >
-> day07 = solve "input-day07.txt" (length . filter hasTLS . parse)
+> day07 = solve "input-day07.txt" (show . length . filter hasTLS . parse)
 
 
 --- Part Two ---
@@ -84,4 +84,4 @@ How many IPs in your puzzle input support SSL?
 >     | otherwise         = allABAs (b:c:ds)
 > allABAs _ = []
 >
-> day07p2 = solve "input-day07.txt" (length . filter hasSSL . parse)
+> day07p2 = solve "input-day07.txt" (show . length . filter hasSSL . parse)

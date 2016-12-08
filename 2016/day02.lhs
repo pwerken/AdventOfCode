@@ -72,7 +72,7 @@ desk. What is the bathroom code?
 > parseM 'R' = R
 > parseM 'U' = U
 >
-> day02 = solve "input-day02.txt" (map p2d . doMoves . parse)
+> day02 = solve "input-day02.txt" (show . map p2d . doMoves . parse)
 
 
 --- Part Two ---
@@ -128,4 +128,4 @@ bathroom code?
 > p2d2 ( 1,  1) = 'C'
 > p2d2 ( 0,  2) = 'D'
 >
-> day02p2 = solve "input-day02.txt" (map p2d2 . doMoves2 . parse)
+> day02p2 = solve "input-day02.txt" (show . map p2d2 . doMoves2 . parse)

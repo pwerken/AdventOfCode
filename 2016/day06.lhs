@@ -49,7 +49,7 @@ version of the message being sent?
 >
 > parse = transpose . lines
 >
-> day06 = solve "input-day06.txt" (map (mostF . frequency) . parse)
+> day06 = solve "input-day06.txt" (show . map (mostF . frequency) . parse)
 
 
 --- Part Two ---
@@ -72,4 +72,4 @@ what is the original message that Santa is trying to send?
 
 > leastF = snd . head . sort
 >
-> day06p2 = solve "input-day06.txt" (map (leastF . frequency) . parse)
+> day06p2 = solve "input-day06.txt" (show . map (leastF . frequency) . parse)

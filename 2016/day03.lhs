@@ -25,7 +25,7 @@ In your puzzle input, how many of the listed triangles are possible?
 > parse :: String -> [[Int]]
 > parse = map (map read . words) . lines
 >
-> nrTriangles = length . filter isTriangle
+> nrTriangles = show . length . filter isTriangle
 >
 > day03 = solve "input-day03.txt" (nrTriangles . parse)
 

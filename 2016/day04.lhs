@@ -43,7 +43,7 @@ What is the sum of the sector IDs of the real rooms?
 > validCRC :: Room -> Bool
 > validCRC r = crc r == calcCRC (filter isLower $ name r)
 >
-> sumSectors = sum . map sector
+> sumSectors = show . sum . map sector
 >
 > str2room str = Room { name = n, sector = s, crc = c }
 >   where
@@ -83,5 +83,5 @@ What is the sector ID of the room where North Pole objects are stored?
 >
 > lookingFor rs = filter (\r -> ("northpole object storage" == name r)) rs
 >
-> day04p2 = solve "input-day04.txt" ( sector . head . lookingFor
+> day04p2 = solve "input-day04.txt" ( show . sector . head . lookingFor
 >                     . map decypher . filter validCRC . parse)

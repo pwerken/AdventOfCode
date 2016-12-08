@@ -39,7 +39,7 @@ Given the actual Door ID, what is the password?
 >
 > hashInput i = show . md5 . pack $ puzzleInput ++ (show i)
 >
-> toPassword = map (head . drop 5) . take 8
+> toPassword = show . map (head . drop 5) . take 8
 >
 > day05 = toPassword . filter hashCheck . map hashInput $ [1..]
 
@@ -83,7 +83,7 @@ proud of your solution if it uses a cinematic "decrypting" animation.
 > mergePos '_' x = x
 > mergePos  y  _ = y
 >
-> day05p2 = head . filter (all (/= '_'))
+> day05p2 = show . head . filter (all (/= '_'))
 >         . scanl1 (zipWith mergePos) . map toPos
 >         . filter (isValidPos . head) . map (drop 5)
 >         . filter hashCheck . map hashInput $ [1..]
