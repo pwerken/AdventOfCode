@@ -5,10 +5,14 @@ import Data.List
 solve :: String -> (String -> String) -> IO ()
 solve filename solver = readFile filename >>= putStrLn . solver
 
-splitOn x [] = []
-splitOn x xs = first : splitOn x (drop 1 rest)
+split :: Eq a => a -> [a] -> ([a], [a])
+split x = mapSnd (drop 1) . span (/= x)
+
+splitOn :: Eq a => a -> [a] -> [[a]]
+splitOn _ [] = []
+splitOn x xs = first : splitOn x rest
   where
-    (first, rest) = span (/= x) xs
+    (first, rest) = split x xs
 
 mapFst :: (a -> b) -> (a, c) -> (b, c)
 mapSnd :: (a -> b) -> (c, a) -> (c, b)
