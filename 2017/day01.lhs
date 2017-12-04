@@ -31,6 +31,7 @@ list is circular, so the digit after the last digit is the first digit in
 the list.
 
 For example:
+
   - 1122 produces a sum of 3 (1 + 2) because the first digit (1) matches
     the second digit and the third digit (2) matches the fourth digit.
   - 1111 produces 4 because each digit (all 1) matches the next.
@@ -40,6 +41,7 @@ For example:
 
 What is the solution to your captcha?
 
+>
 > import Helpers
 >
 > shiftTpls :: [a] -> [(a, a)]
@@ -66,16 +68,18 @@ items, only include a digit in your sum if the digit 10/2 = 5 steps forward
 matches it. Fortunately, your list has an even number of elements.
 
 For example:
+
   - 1212 produces 6: the list contains 4 items, and all four digits match
-	the digit 2 items ahead.
+    the digit 2 items ahead.
   - 1221 produces 0, because every comparison is between a 1 and a 2.
   - 123425 produces 4, because both 2s match each other, but no other digit
-	has a match.
+    has a match.
   - 123123 produces 12.
   - 12131415 produces 4.
 
 What is the solution to your new captcha?
 
+>
 > splitTpls :: [a] -> [(a, a)]
 > splitTpls xs  = uncurry (zipWith (,)) (splitAt (length xs `div` 2) xs)
 >

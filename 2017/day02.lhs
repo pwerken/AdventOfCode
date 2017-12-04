@@ -27,6 +27,7 @@ In this example, the spreadsheet's checksum would be 8 + 4 + 6 = 18.
 
 What is the checksum for the spreadsheet in your puzzle input?
 
+>
 > import Helpers
 > import Data.List
 > import Data.Tuple
@@ -76,6 +77,7 @@ What is the sum of each row's result in your puzzle input?
 
 Although it hasn't changed, you can still get your puzzle input.
 
+>
 > allPairs []     = []
 > allPairs (x:xs) = map ((,) x) xs ++ allPairs xs
 >
