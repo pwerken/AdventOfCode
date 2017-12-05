@@ -50,10 +50,10 @@ What is the solution to your captcha?
 > sumSameOnly :: [(Char, Char)] -> Int
 > sumSameOnly = sum . map (read . (:[]) . fst) . filter (uncurry (==))
 >
-> solve1 :: (String -> String) -> IO()
+> solve1 :: Show a => (String -> a) -> IO()
 > solve1 f = solve "input-day01.txt" (f . head . lines)
 >
-> day01 = solve1 (show . sumSameOnly . shiftTpls)
+> day01 = solve1 (sumSameOnly . shiftTpls)
 
 
 --- Part Two ---
@@ -83,4 +83,4 @@ What is the solution to your new captcha?
 > splitTpls :: [a] -> [(a, a)]
 > splitTpls xs  = uncurry (zipWith (,)) (splitAt (length xs `div` 2) xs)
 >
-> day01p2 = solve1 (show . (2*) . sumSameOnly . splitTpls)
+> day01p2 = solve1 ((2*) . sumSameOnly . splitTpls)

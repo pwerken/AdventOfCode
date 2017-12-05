@@ -19,7 +19,7 @@ many passphrases are valid?
 > import Helpers
 > import Data.List
 >
-> solve4 f = solve "input-day04.txt" (show . length . filter f . lines)
+> solve4 f = solve "input-day04.txt" (length . filter f . lines)
 >
 > day04 = solve4 ((\ws -> length ws == length (nub ws)) . words)
 

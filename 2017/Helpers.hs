@@ -2,8 +2,8 @@ module Helpers where
 
 import Data.List
 
-solve :: String -> (String -> String) -> IO ()
-solve filename solver = readFile filename >>= putStrLn . solver
+solve :: Show a => String -> (String -> a) -> IO ()
+solve filename solver = readFile filename >>= putStrLn . show . solver
 
 split :: Eq a => a -> [a] -> ([a], [a])
 split x = mapSnd (drop 1) . span (/= x)

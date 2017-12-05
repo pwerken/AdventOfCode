@@ -39,7 +39,7 @@ What is the checksum for the spreadsheet in your puzzle input?
 > diff xs = maximum xs - minimum xs
 >
 > solve2 :: ([Int] -> Int) -> IO()
-> solve2 f = solve "input-day02.txt" (show . sum . map f . parse)
+> solve2 f = solve "input-day02.txt" (sum . map f . parse)
 >
 > day02 = solve2 diff
 
