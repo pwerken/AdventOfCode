@@ -116,7 +116,7 @@ correct. What is the name of the bottom program?
 >
 > replaceSub :: Tower -> Tower -> Tower
 > replaceSub t (Fork n i ts) = Fork n i $ map (replaceLeaf t) ts
-
+>
 > replaceLeaf :: Tower -> Tower -> Tower
 > replaceLeaf x y = if getName x == getName y then x else y
 >
@@ -129,7 +129,7 @@ correct. What is the name of the bottom program?
 >     fs = applyAll (map replaceSub bs)
 >     (as, bs) = partition hasLeafs ts
 >
-> day01 = solve "input-day07.txt" (getName . buildTower . parse)
+> day07 = solve "07" (getName . buildTower . parse)
 
 
 --- Part Two ---

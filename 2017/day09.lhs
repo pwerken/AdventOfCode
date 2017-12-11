@@ -69,7 +69,7 @@ What is the total score for all groups in your input?
 >
 > scoreGroups :: String -> Int
 > scoreGroups = scoreGroups' 1
-
+>
 > scoreGroups' :: Int -> String -> Int
 > scoreGroups' i ('<':xs) = scoreGroups' i . dropGarbage $ xs
 > scoreGroups' i ('{':xs) = i + (scoreGroups' (i + 1) xs)
@@ -82,7 +82,7 @@ What is the total score for all groups in your input?
 > dropGarbage ('!':xs) = dropGarbage (tail xs)
 > dropGarbage (_:xs)   = dropGarbage xs
 >
-> day09 = solve "input-day09.txt" scoreGroups
+> day09 = solve "09" scoreGroups
 
 
 --- Part Two ---
@@ -117,4 +117,4 @@ How many non-canceled characters are within the garbage in your puzzle input?
 > countGarbage'' (i, ('!':xs))  = countGarbage'' (i, tail xs)
 > countGarbage'' (i, (_:xs))    = countGarbage'' (i + 1, xs)
 >
-> day09p2 = solve "input-day09.txt" countGarbage
+> day09p2 = solve "09" countGarbage

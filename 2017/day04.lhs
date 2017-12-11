@@ -19,9 +19,9 @@ many passphrases are valid?
 > import Helpers
 > import Data.List
 >
-> solve4 f = solve "input-day04.txt" (length . filter f . lines)
+> hasNoDups ws = length ws == length (nub ws)
 >
-> day04 = solve4 ((\ws -> length ws == length (nub ws)) . words)
+> day04 = solve "04" (length . filter (hasNoDups . words) . lines)
 
 
 --- Part Two ---
@@ -45,4 +45,4 @@ For example:
 Under this new system policy, how many passphrases are valid?
 
 >
-> day04p2 = solve4 ((\ws -> length ws == length (nub ws)) . map sort . words)
+> day04p2 = solve "04" (length . filter (hasNoDups . map sort . words) . lines)

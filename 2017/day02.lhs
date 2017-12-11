@@ -38,10 +38,7 @@ What is the checksum for the spreadsheet in your puzzle input?
 > diff :: [Int] -> Int
 > diff xs = maximum xs - minimum xs
 >
-> solve2 :: ([Int] -> Int) -> IO()
-> solve2 f = solve "input-day02.txt" (sum . map f . parse)
->
-> day02 = solve2 diff
+> day02 = solve "02" (sum . map diff . parse)
 
 
 --- Part Two ---
@@ -75,8 +72,6 @@ In this example, the sum of the results would be 4 + 3 + 2 = 9.
 
 What is the sum of each row's result in your puzzle input?
 
-Although it hasn't changed, you can still get your puzzle input.
-
 >
 > allPairs []     = []
 > allPairs (x:xs) = map ((,) x) xs ++ allPairs xs
@@ -84,4 +79,4 @@ Although it hasn't changed, you can still get your puzzle input.
 > cleanDiv :: [(Int, Int)] -> Int
 > cleanDiv = fst . head . filter ((==) 0 . snd) . map (uncurry divMod . swap)
 >
-> day02p2 = solve2 (cleanDiv . allPairs . nub . sort)
+> day02p2 = solve "02" (sum . map (cleanDiv . allPairs . nub . sort) . parse)

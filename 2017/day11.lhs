@@ -56,7 +56,7 @@ For example:
 > dist :: Pos -> Int
 > dist (x, y, z) = (abs(x) + abs (y) + abs(z)) `div` 2
 >
-> day11 = solve "input-day11.txt" (dist . moveAll . parse)
+> day11 = solve "11" (dist . moveAll . parse)
 
 
 --- Part Two ---
@@ -70,4 +70,4 @@ How many steps away is the furthest he ever got from his starting position?
 > maxDist :: [Pos] -> Int
 > maxDist = maximum . map dist
 >
-> day11p2 = solve "input-day11.txt" (maxDist . allPos . parse)
+> day11p2 = solve "11" (maxDist . allPos . parse)

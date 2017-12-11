@@ -94,7 +94,7 @@ list?
 >
 > mul2 (x:y:_) = x * y
 >
-> day10 = solve "input-day10.txt" (mul2 . encode . parse)
+> day10 = solve "10" (mul2 . encode . parse)
 
 
 --- Part Two ---
@@ -179,4 +179,4 @@ might encounter.
 > toHex :: Int -> Char
 > toHex i = chr $ if i < 10 then i + 48 else i + 87
 >
-> day10p2 = solve "input-day10.txt" (hash . xor16 . encode . prepare . init)
+> day10p2 = solve "10" (hash . xor16 . encode . prepare . init)

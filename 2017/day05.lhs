@@ -61,7 +61,7 @@ How many steps does it take to reach the exit?
 >     q = p + i
 >     js = is // [(p, f i)]
 >
-> day05 = solve "input-day05.txt" (length . run (+ 1) . parse)
+> day05 = solve "05" (length . run (+ 1) . parse)
 
 
 --- Part Two ---
@@ -77,4 +77,4 @@ How many steps does it now take to reach the exit?
 >
 > f2 x = if x > 2 then x - 1 else x + 1
 >
-> day05p2 = solve "input-day05.txt" (length . run f2 . parse)
+> day05p2 = solve "05" (length . run f2 . parse)

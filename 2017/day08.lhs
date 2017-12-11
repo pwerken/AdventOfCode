@@ -78,7 +78,7 @@ in your puzzle input?
 > largestResult :: [[Reg]] -> Int
 > largestResult = maximum . map snd . last
 >
-> day08 = solve "input-day08.txt" (largestResult . execute . parse)
+> day08 = solve "08" (largestResult . execute . parse)
 
 
 --- Part Two ---
@@ -93,4 +93,4 @@ was evaluated).
 > largestOveral :: [[Reg]] -> Int
 > largestOveral = maximum . map maximum . filter (not . null) . map (map snd)
 >
-> day08p2 = solve "input-day08.txt" (largestOveral . execute . parse)
+> day08p2 = solve "08" (largestOveral . execute . parse)

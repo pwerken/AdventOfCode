@@ -74,10 +74,7 @@ seen before?
 > incrList x 0 (z:zs) = z+x   : incrList x 0 zs
 > incrList x y (z:zs) = z+x+1 : incrList x (y - 1) zs
 >
-> solve6 :: Show a => ([Int] -> a) -> IO()
-> solve6 f = solve "input-day06.txt" (f . parse)
->
-> day06 = solve6 (length . tail . looper)
+> day06 = solve "06" (length . tail . looper . parse)
 
 
 --- Part Two ---
@@ -94,4 +91,4 @@ How many cycles are in the infinite loop that arises from the configuration
 in your puzzle input?
 
 >
-> day06p2 = solve6 (length . tail . looper . last . looper)
+> day06p2 = solve "06" (length . tail . looper . last . looper . parse)
