@@ -338,3 +338,11 @@ to pass through the firewall without being caught?
 > tryDelays = map calcSeverity . zipWith ($) (map delay [0..]) . repeat
 >
 > day13p2 = solve "13" (length . takeWhile (> 0) . tryDelays . parse)
+>
+> removeMod :: (Int, Int) -> Int -> Bool
+> removeMod (l, r) = (/=) 0 . flip mod (2 * r - 2) . (+ l)
+>
+> stackedFilter :: [(Int, Int)] -> [Int]
+> stackedFilter = flip (foldl1 (.)) [0..] . map (filter . removeMod)
+>
+> day13p2' = solve "13" (head . stackedFilter . parse)
