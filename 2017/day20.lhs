@@ -53,39 +53,60 @@ Which particle will stay closest to position <0,0,0> in the long term?
 > import Helpers
 > import Data.List
 >
-> type XYZ = [Int]
-> type PVA = [XYZ]
+> data XYZ = XYZ Int Int Int
+> data PVA = PVA XYZ XYZ XYZ
+>
+> instance (Show XYZ) where
+>   show (XYZ x y z) = concat [ "<",show x,",",   show y,",",   show z,">"]
+> instance (Show PVA) where
+>   show (PVA p v a) = concat ["p=",show p,", v=",show v,", a=",show a]
 >
 > parse :: String -> [PVA]
-> parse = map parsePVA. lines
+> parse = map parsePVA . lines
 >
 > parsePVA :: String -> PVA
-> parsePVA str = map parseXYZ $ [ps, vs, as]
+> parsePVA str = PVA (parseXYZ p) (parseXYZ v) (parseXYZ a)
 >   where
 >     sub3D = break ((==) '>') . tail . snd . break ((==) '<')
->     (ps, xs) = sub3D str
->     (vs, ys) = sub3D xs
->     (as, _)  = sub3D ys
+>     (p, xs) = sub3D str
+>     (v, ys) = sub3D xs
+>     (a, _)  = sub3D ys
 >
 > parseXYZ :: String -> XYZ
-> parseXYZ = map read . splitOn ','
+> parseXYZ s = let [x,y,z] = map read . splitOn ',' $ s
+>               in XYZ x y z
 >
-> toDist :: XYZ -> Int
-> toDist = sum . map abs
+> xyzManhattan :: XYZ -> Int
+> xyzManhattan = sum . map abs . xyz2List
 >
-> cmpList [] = EQ
-> cmpList (x:xs)
->   | x == EQ   = cmpList xs
+> xyz2List :: XYZ -> [Int]
+> xyz2List (XYZ x y z) = [x, y, z]
+>
+> list2xyz :: [Int] -> XYZ
+> list2xyz [x, y, z] = (XYZ x y z)
+>
+> xyzOrder :: XYZ -> XYZ -> Ordering
+> xyzOrder a b = compare (xyzManhattan a) (xyzManhattan b)
+>
+> pva2List :: PVA -> [XYZ]
+> pva2List (PVA p v a) = [p, v, a]
+>
+> list2pva :: [XYZ] -> PVA
+> list2pva [p, v, a] = (PVA p v a)
+>
+> pvaOrderA :: PVA -> PVA -> Ordering
+> pvaOrderA a b = let as = reverse . pva2List $ a
+>                     bs = reverse . pva2List $ b
+>                  in compareList $ zipWith xyzOrder as bs
+>
+> compareList [] = EQ
+> compareList (x:xs)
+>   | x == EQ   = compareList xs
 >   | otherwise = x
 >
-> orderPVA :: PVA -> PVA -> Ordering
-> orderPVA a b = cmpList $ zipWith orderXYZ (reverse a) (reverse b)
->
-> orderXYZ :: XYZ -> XYZ -> Ordering
-> orderXYZ a b = compare (toDist a) (toDist b)
 >
 > findClosest :: [PVA] -> Int
-> findClosest = let f a b = orderPVA (snd a) (snd b)
+> findClosest = let f a b = pvaOrder (snd a) (snd b)
 >                in fst . head . sortBy f . zipWith (,) [0..]
 >
 > day20 = solve "20" (findClosest . parse)
@@ -127,3 +148,34 @@ unharmed.
 
 How many particles are left after all collisions are resolved?
 
+>
+> p1, p2, p3, p4 :: PVA
+> p1 = parsePVA "p=<-6,0,0>, v=< 3,0,0>, a=< 0,0,0>"
+> p2 = parsePVA "p=<-4,0,0>, v=< 2,0,0>, a=< 0,0,0>"
+> p3 = parsePVA "p=<-2,0,0>, v=< 1,0,0>, a=< 0,0,0>"
+> p4 = parsePVA "p=< 3,0,0>, v=<-1,0,0>, a=< 0,0,0>"
+>
+> pvaOrder :: PVA -> PVA -> Ordering
+> pvaOrder a b = let as = pva2List $ a
+>                    bs = pva2List $ b
+>                 in compareList $ zipWith xyzOrder as bs
+>
+> addXYZ :: XYZ -> XYZ -> XYZ
+> addXYZ (XYZ ax ay az) (XYZ bx by bz) = XYZ (ax+bx) (ay+by) (az+bz)
+>
+> step :: PVA -> PVA
+> step (PVA p v a)
+>   = let v2 = addXYZ v a
+>         p2 = addXYZ p v2
+>      in PVA p2 v2 a
+>
+> removeCollisions :: [PVA] -> [PVA]
+> removeCollisions = concat . filter ((==) 1 . length) . groupBy collide
+>
+> collide :: PVA -> PVA -> Bool
+> collide (PVA a _ _) (PVA b _ _) = and $ zipWith (==) (xyz2List a) (xyz2List b)
+>
+> tick :: [PVA] -> [PVA]
+> tick = removeCollisions . map step
+>
+> day20p2 = solve "20" (length . head . drop 1000 . iterate tick . parse)
