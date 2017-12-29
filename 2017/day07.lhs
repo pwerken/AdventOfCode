@@ -69,7 +69,7 @@ correct. What is the name of the bottom program?
 > import Helpers
 > import Data.List
 >
-> data Tower = Fork String Int [Tower]
+> data Tower = Fork String Int Int [Tower]
 >            | Leaf String
 >
 >   deriving Show
@@ -96,26 +96,31 @@ correct. What is the name of the bottom program?
 > parse = map parse' . map words . lines
 >   where
 >     parse' :: [String] -> Tower
->     parse' (n:i:ts) = Fork n (read . init . tail $ i) (parse'' ts)
+>     parse' (n:i:ts) = Fork n j j (parse'' ts)
+>       where
+>         j = read . init . tail $ i
 >
 >     parse'' :: [String] -> [Tower]
 >     parse'' [] = []
 >     parse'' (_:xs) = map Leaf . map (filter (/= ',')) $ xs
 >
 > getName :: Tower -> String
-> getName (Leaf x)     = x
-> getName (Fork x _ _) = x
+> getName (Leaf x)       = x
+> getName (Fork x _ _ _) = x
 >
 > isLeaf :: Tower -> Bool
 > isLeaf (Leaf _) = True
 > isLeaf _        = False
 >
 > hasLeafs :: Tower -> Bool
-> hasLeafs (Leaf _ )     = False
-> hasLeafs (Fork _ _ ts) = any isLeaf ts
+> hasLeafs (Leaf _ )       = False
+> hasLeafs (Fork _ _ _ ts) = any isLeaf ts
 >
 > replaceSub :: Tower -> Tower -> Tower
-> replaceSub t (Fork n i ts) = Fork n i $ map (replaceLeaf t) ts
+> replaceSub t (Fork n w _ ts) = Fork n w a $ map (replaceLeaf t) ts
+>   where
+>     ss = map (replaceLeaf t) ts
+>     a = w + (sum . map above $ ss)
 >
 > replaceLeaf :: Tower -> Tower -> Tower
 > replaceLeaf x y = if getName x == getName y then x else y
@@ -164,3 +169,25 @@ Given that exactly one program is the wrong weight, what would its weight
 need to be to balance the entire tower?
 
 >
+> isBalanced :: Eq a => [a] -> Bool
+> isBalanced []     = True
+> isBalanced (x:xs) = all (x == ) xs
+>
+> getUnbalanced :: Eq a => [a] -> (a, a)
+> getUnbalanced (x:xs) = if length ys > 1 then (x, head ys) else (head ys, x)
+>   where
+>     ys = filter (x /=) xs
+>
+> above :: Tower -> Int
+> above (Fork _ _ a _) = a
+>
+> findImbalance :: Int -> Tower -> Int
+> findImbalance d (Fork n w _ ss)
+>     | (isBalanced ws) = d + w
+>     | otherwise       = findImbalance (y - x) sub
+>   where
+>     ws     = map above ss
+>     (x, y) = getUnbalanced ws
+>     sub    = head . filter ((==) x . above) $ ss
+>
+> day07p2 = solve "07" (findImbalance 0 . buildTower . parse)
