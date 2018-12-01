@@ -52,6 +52,7 @@ To begin, get your puzzle input.
 
 >
 > import Helpers
+> import qualified Data.IntSet as S
 >
 > parse :: String -> [Int]
 > parse = map read . lines . filter (/= '+')
@@ -92,7 +93,7 @@ Here are other examples:
 What is the first frequency your device reaches twice?
 
 >
-> seen xs (y:ys) = if y `elem` xs then y else seen (y:xs) ys
-> seen xs [] = undefined
+> seen :: S.IntSet -> [Int] -> Int
+> seen s (x:xs) = if S.member x s then x else seen (S.insert x s) xs
 >
-> day01p2 = solve "01" (seen [] . scanl (+) 0 . cycle . parse)
+> day01p2 = solve "01" (seen S.empty . scanl1 (+) . cycle . parse)
