@@ -15,6 +15,9 @@ splitOn x xs = first : splitOn x rest
   where
     (first, rest) = split x xs
 
+sortWith :: Ord b => (a -> b) -> [a] -> [a]
+sortWith f = sortBy (\a b -> compare (f a) (f b))
+
 mapFst :: (a -> b) -> (a, c) -> (b, c)
 mapSnd :: (a -> b) -> (c, a) -> (c, b)
 mapFst f (x, y) = (f x, y)
