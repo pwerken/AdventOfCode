@@ -15,6 +15,12 @@ splitOn x xs = first : splitOn x rest
   where
     (first, rest) = split x xs
 
+maxWith :: Ord b => (a -> b) -> [a] -> a
+maxWith f xs = snd . foldl1 g . map (\x -> (f x, x)) $ xs
+  where
+    g :: Ord a => (a, b) -> (a, b) -> (a, b)
+    g x y = if (fst x) > (fst y) then x else y
+
 sortWith :: Ord b => (a -> b) -> [a] -> [a]
 sortWith f = sortBy (\a b -> compare (f a) (f b))
 
