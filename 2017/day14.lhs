@@ -51,6 +51,7 @@ Given your actual key string, how many squares are used?
 > import Helpers
 > import Data.Bits
 > import Data.Char
+> import Data.List
 >
 > type Code = (Int, [Int])
 >
@@ -72,22 +73,19 @@ Given your actual key string, how many squares are used?
 >     grp16 = take 16 . uncurry (:) . mapSnd grp16 . splitAt 16
 >
 > grid :: String -> [[Int]]
-> grid = map knotHash . rows
+> grid = gridToBinary . map knotHash . rows
 >   where
 >     rows = zipWith (flip (++)) (map (('-':) . show) [0..127]) . repeat
 >
-> countGridBits :: [[Int]] -> Int
-> countGridBits = sum . map (sum . map popCount)
+> gridToBinary :: [[Int]] -> [[Int]]
+> gridToBinary = map (concatMap (toBinary 8))
+>   where
+>     toBinary 0 _ = []
+>     toBinary n i = i `div` n : toBinary (n `div` 2) (i `mod` n)
 >
-> day14 = countGridBits . grid $ "xlqgujun"
+> countGrid = sum . map sum
 >
->
->
->
->
->
-> toHex :: Int -> Char
-> toHex i = chr $ if i < 10 then i + 48 else i + 87
+> day14 = countGrid . grid $ "xlqgujun"
 
 
 --- Part Two ---
@@ -118,3 +116,30 @@ when considering the whole 128x128 grid. In total, in this example, 1242
 regions are present.
 
 How many regions are present given your key string?
+
+>
+> sameRegion :: [Int] -> [Int] -> Int
+> sameRegion (  _:[]) (  _:[]) = 0
+> sameRegion (  0:xs) (  0:ys) =     sameRegion    xs    ys
+> sameRegion (0:1:xs) (1:1:ys) = 1 + sameRegion    xs    ys
+> sameRegion (1:0:xs) (1:1:ys) = 2 + sameRegion (0:xs (1:ys)
+> sameRegion (0:0:xs) (1:0:ys) =     sameRegion xs ys
+> sameRegion (1:1:xs) (1:0:ys) = 2 + sameRegion xs ys
+> sameRegion (1:1:xs) (0:0:ys) = 1 + sameRegion (0:xs) (0:ys)
+> sameRegion (0:1:xs) (0:0:ys) = 1 + sameRegion (0:xs) (0:ys)
+>
+> almostScan :: (a -> a -> b) -> [a] -> [b]
+> almostScan f (x:y:zs) = f x y : almostScan f (y:zs)
+> almostScan _ _        = []
+>
+> -- day14p2 = length . mergeGrps . grps . gridCoord . grid $ "xlqgujun"
+>
+> showGrid = putStrLn . unlines . viewGrid . grid $ "xlqgujun"
+>
+> viewGrid :: [[Int]] -> [[Char]]
+> viewGrid = map (map i2c)
+>   where
+>     i2c 0 = '.'
+>     i2c 1 = '#'
+>
+> ex = "flqrgnkx"

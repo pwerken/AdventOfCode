@@ -1,4 +1,4 @@
--- Day 15: Beverage Bandits ---
+--- Day 15: Beverage Bandits ---
 
 Having perfected their hot chocolate, the Elves have a new problem: the
 Goblins that live in these caves will do anything to steal it. Looks like

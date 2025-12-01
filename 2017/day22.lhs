@@ -279,3 +279,31 @@ feature of this evolved virus is speed; of the first dayday bursts,
 
 Given your actual map, after 10000000 bursts of activity, how many bursts
 cause a node to become infected? (Do not count nodes that begin infected.)
+
+>
+> changeCell' :: Cell -> Cell
+> changeCell' C = W
+> changeCell' W = I
+> changeCell' I = F
+> changeCell' F = C
+>
+> rotate' d C  = ((d + 3) `mod` 4)
+> rotate' d W  = d
+> rotate' d I  = ((d + 1) `mod` 4)
+> rotate' d F  = ((d + 2) `mod` 4)
+>
+> burst' :: State -> State
+> burst' (g, (p, d))  = let i = getCell p g
+>                           v = moveVirus p (rotate' d i)
+>                        in ((p, changeCell' i):g, v)
+>
+> bursts' :: Int -> State -> State
+> bursts' i = mapFst (take i) . head . drop i . iterate burst'
+>
+> day22p2 = solve "22" (countInf . bursts' 10000000 . start . parse)
+>
+> main = putStrLn . show . countInf . bursts' 100 . start $ tst
+> -- day22p2 -- 2548 is too low
+>
+> tst :: Grid
+> tst = [((-1,0),I), ((1,-1),I)]

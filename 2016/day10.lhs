@@ -42,3 +42,19 @@ with value-2 microchips.
 
 Based on your instructions, what is the number of the bot that is
 responsible for comparing value-61 microchips with value-17 microchips?
+
+> import Helpers
+>
+> type Bot  = Int
+> type Chip = Int
+> data Instr = Init Bot Chip
+>            | Give Bot Bot Bot
+>   deriving Show
+>
+> parse = map (parseInstr . words) . lines
+>
+> parseInstr :: [String] -> Instr
+> parseInstr [_, v, _, _, _, i]                   = Init (read i) (read v)
+> parseInstr [_, b, _, _, _, _, l, _, _, _, _, h] = Give (read b) (read l) (read h)
+>
+> day10 = solve "input-day10.txt" (show . parse)
