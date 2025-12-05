@@ -59,7 +59,6 @@ What do you get if you add up all of the invalid IDs?
 > parse :: String -> [(Int, Int)]
 > parse = map (toTuple . map read . splitOn '-') . splitOn ',' . firstLine
 >   where
->     toTuple [a, b] = (a, b)
 >     firstLine = takeWhile (/= '\n')
 >
 > expandRange :: (Int, Int) -> [Int]

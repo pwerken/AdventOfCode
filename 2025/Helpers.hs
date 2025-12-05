@@ -16,9 +16,16 @@ splitOn x xs = first : splitOn x rest
     (first, rest) = split x xs
 
 mapFst :: (a -> b) -> (a, c) -> (b, c)
+mapFst = (flip mapTuple) id
+
 mapSnd :: (a -> b) -> (c, a) -> (c, b)
-mapFst f (x, y) = (f x, y)
-mapSnd f (x, y) = (x, f y)
+mapSnd = mapTuple id
+
+mapTuple :: (a -> c) -> (b -> d) -> (a, b) -> (c, d)
+mapTuple f g (x, y) = (f x, g y)
+
+toTuple :: [a] -> (a, a)
+toTuple [x, y] = (x, y)
 
 chuncksOf :: Int -> [a] -> [[a]]
 chuncksOf _ [] = []
