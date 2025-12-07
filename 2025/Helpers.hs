@@ -6,6 +6,16 @@ solve :: Show a => String -> (String -> a) -> IO ()
 solve nr solver = let filename = "input-day" ++ nr ++ ".txt"
                    in readFile filename >>= putStrLn . show . solver
 
+uncons :: [a] -> (a, [a])
+uncons (x:xs) = (x, xs)
+
+dedup :: Eq a => [a] -> [a]
+dedup [] = []
+dedup [x] = [x]
+dedup (x:y:zs)
+  | x /= y    = x : dedup (y:zs)
+  | otherwise =     dedup (y:zs)
+
 split :: Eq a => a -> [a] -> ([a], [a])
 split x = mapSnd (drop 1) . span (/= x)
 
