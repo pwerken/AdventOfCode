@@ -100,6 +100,19 @@ paper can be accessed by a forklift?
 > allAccessible g = filter (isAccessible g) . filter (isFilled g) . Map.keys $ g
 >
 > day04p1 = solve "04" (length . allAccessible . parse)
+>
+> e = unlines
+>       [ "..@@.@@@@."
+>       , "@@@.@.@.@@"
+>       , "@@@@@.@.@@"
+>       , "@.@@@@..@."
+>       , "@@.@@@@.@@"
+>       , ".@@@@@@@.@"
+>       , ".@.@.@.@@@"
+>       , "@.@@@.@@@@"
+>       , ".@@@@@@@@."
+>       , "@.@.@@@.@."
+>       ]
 
 --- Part Two ---
 Now, the Elves just need help accessing as much of the paper as they can.

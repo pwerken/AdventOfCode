@@ -63,6 +63,13 @@ from each bank; what is the total output joltage?
 > bigPair (a:bs) = max [a, maximum bs] . bigPair . dropWhile (< a) $ bs
 >
 > day03p1 = solve "03" (sum . map (read . bigPair) . parse)
+>
+> e = unlines
+>       [ "987654321111111"
+>       , "811111111111119"
+>       , "234234234234278"
+>       , "818181911112111"
+>       ]
 
 --- Part Two ---
 

@@ -107,6 +107,8 @@ open the door?
 > countZeros = length . filter (== 0)
 >
 > day01p1 = solve "01" (countZeros . doTurns . parse)
+>
+> e = "L68\nL30\nR48\nL5\nR60\nL55\nL1\nL99\nR14\nL82\n"
 
 --- Part Two ---
 
